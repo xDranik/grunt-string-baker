@@ -4,8 +4,14 @@ var properties = require('properties');
 module.exports = function() {
   var parser = {};
   parser.parse = function(filePath) {
-    var fileContents = fs.readFileSync(filePath, 'utf8');
-    var context = properties.parse(fileContents);
+    var context = {};
+
+    try {
+      var fileContents = fs.readFileSync(filePath, 'utf8');
+      context = properties.parse(fileContents);
+    } catch (err) {
+      // log error fail gracefully (return {})
+    }
 
     return context;
   };
