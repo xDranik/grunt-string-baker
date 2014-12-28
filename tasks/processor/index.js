@@ -1,3 +1,5 @@
+'use strict';
+
 var path = require('path');
 var _ = require('lodash');
 
@@ -14,7 +16,7 @@ module.exports = function(grunt) {
 
   processor._generateContext = function(files) {
     var contextList = _.map(files, function(filePath) {
-      var extension = path.extename(filePath).substring(1);
+      var extension = path.extname(filePath).substring(1);
       return parsers[extension].parse(filePath);
     });
     var context = _.merge.apply(null, contextList);
@@ -24,25 +26,24 @@ module.exports = function(grunt) {
 
   /*
     Modified version of https://gist.github.com/penguinboy/762197
+    using lodash
   */
-  processor._flattenObject = function(ob) {
-    var toReturn = {};
+  processor._flattenObject = function(srcObj) {
+    var result = {};
 
-    for (var i in ob) {
-      if (!ob.hasOwnProperty(i)) continue;
-
-      if ((typeof ob[i]) == 'object') {
-        var flatObject = flattenObject(ob[i]);
-        for (var x in flatObject) {
-          if (!flatObject.hasOwnProperty(x)) continue;
-
-          toReturn[i + '.' + x] = flatObject[x];
-        }
-      } else {
-        toReturn[i] = ob[i];
+    _.forOwn(srcObj, function(srcVal, srcKey) {
+      if (typeof srcVal === 'object') {
+        var flatObj = processor._flattenObject(srcVal);
+        _.forOwn(flatObj, function(flatVal, flatKey) {
+          result[srcKey + '.' + flatKey] = flatVal;
+        });
       }
-    }
-    return toReturn;
+      else {
+        result[srcKey] = srcObj[srcKey];
+      }
+    });
+
+    return result;
   };
 
   return processor;
