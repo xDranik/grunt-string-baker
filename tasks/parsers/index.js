@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function(grunt) {
   var parsers = {};
   parsers.js = require('./js-parser')();

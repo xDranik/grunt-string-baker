@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = function() {
   var parser = {};
   parser.parse = function(filePath) {
