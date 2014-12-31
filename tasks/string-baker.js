@@ -8,7 +8,7 @@
 
 'use strict';
 
-var stringBaker = require('./lib/string-baker.js');
+var baker = require('./lib/baker.js');
 
 module.exports = function(grunt) {
 
@@ -29,7 +29,8 @@ module.exports = function(grunt) {
         defaultKeyString: 'KEY'
       });
 
-      stringBaker.bake(files, replacements, options);
+      baker.validateArguments(files, replacements, options);
+      baker.bake(files, replacements, options);
     }
   );
 };
