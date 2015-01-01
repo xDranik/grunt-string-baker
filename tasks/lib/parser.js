@@ -7,7 +7,7 @@ var properties = require('properties');
 var parser = {};
 
 parser.js = function(filepath) {
-  return require(filepath);
+  return require(path.resolve(filepath));
 };
 
 parser.json = function(filepath) {
@@ -16,12 +16,12 @@ parser.json = function(filepath) {
 
 parser.properties = function(filepath) {
   var context = {};
+  var fileContents = fs.readFileSync(filepath, 'utf8');
 
   try {
-    var fileContents = fs.readFileSync(filepath, 'utf8');
     context = properties.parse(fileContents);
   } catch (err) {
-    // log error fail gracefully (return {})
+    grunt.fail.warn('Failed to parse ' + filepath + '. Error:' + err);
   }
 
   return context;
