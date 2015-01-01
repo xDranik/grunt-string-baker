@@ -11,13 +11,9 @@
 var baker = require('./lib/baker.js');
 
 module.exports = function(grunt) {
-
-  // Please see the Grunt documentation for more information regarding task
-  // creation: http://gruntjs.com/creating-tasks
-
   grunt.registerMultiTask(
     'string_baker',
-    'The best Grunt plugin ever.',
+    'Grunt plugin to bake values into files.',
     function() {
       var files = {
         src: this.data.src,
