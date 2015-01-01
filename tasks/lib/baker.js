@@ -1,4 +1,3 @@
-// just move all this to tasks/string-baker.js
 'use strict';
 
 var path = require('path');
@@ -13,15 +12,22 @@ exports.bake = function(files, replacements, options) {
   var dest = files.dest;
   var dataFiles = utils.expandFilePattern(files.dataFiles);
   var context = dataFileHelper.getContext(dataFiles);
-  var replacementRegExp = replacementHelper.getRegExp(replacements, options);
+  var replacementRegExps = replacementHelper.getReplacementRegExps(
+    replacements,
+    options
+  );
   var destinationPath;
 
   _.forEach(srcFiles, function(srcFile) {
     destinationPath = exports.getDestinationPath(srcFile, dest);
-    grunt.file.copy(srcFile, destinationPath, function(text) {
-      return text.replace(replacementRegExp, function(match, key) {
-        return context[key] || match;
-      });
+    grunt.file.copy(srcFile, destinationPath, {
+      process: function(text) {
+        return _.reduce(replacementRegExps, function(resultText, rRegExp) {
+          return resultText.replace(rRegExp, function(match, key) {
+            return context[key] || match;
+          });
+        }, text);
+      }
     });
   });
 };
@@ -44,7 +50,7 @@ exports.validateArguments = function(files, replacements, options) {
 exports.validateFiles = function(files) {
   var srcType = typeof files.src;
   var destType = typeof files.dest;
-  var dataFilesType = typeof files.destFiles;
+  var dataFilesType = typeof files.dataFiles;
 
   if (!Array.isArray(files.src) && srcType !== 'string') {
     grunt.fail.warn('src must be a string or array of strings.');
@@ -52,8 +58,8 @@ exports.validateFiles = function(files) {
   if (destType !== 'string' && destType !== 'undefined') {
     grunt.fail.warn('dest must be a string or undefined.');
   }
-  if (!Array.isArray(files.destFiles) && dataFilesType !== 'string') {
-    grunt.fail.warn('destFiles must be a string or array of strings.');
+  if (!Array.isArray(files.dataFiles) && dataFilesType !== 'string') {
+    grunt.fail.warn('dataFiles must be a string or array of strings.');
   }
 };
 
