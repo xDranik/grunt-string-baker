@@ -27,7 +27,7 @@ exports.getReplacementRegExps = function(replacements, options) {
 };
 
 exports.buildRegExp = function(replacement) {
-  var keyStringPattern = '([a-z0-9]+(\\.[a-z0-9]+)*)';
+  var keyStringPattern = '([a-z0-9_]+(\\.[a-z0-9_]+)*)';
   var replacementPattern = utils.escapeRegExp(replacement.pattern)
     .replace(replacement.keyString, keyStringPattern);
 
