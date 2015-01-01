@@ -4,10 +4,6 @@ var grunt = require('grunt');
 var _ = require('lodash');
 
 exports.expandFilePattern = function(pattern) {
-  if (typeof pattern === 'string') {
-    pattern = [pattern];
-  }
-
   return grunt.file.expand({filter: 'isFile'}, pattern);
 };
 
