@@ -33,18 +33,18 @@ module.exports = function(grunt) {
       default_options: {
         options: {
         },
-        files: {
-          'tmp/default_options': ['test/fixtures/testing', 'test/fixtures/123']
-        }
-      },
-      custom_options: {
-        options: {
-          separator: ': ',
-          punctuation: ' !!!'
-        },
-        files: {
-          'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123']
-        }
+        src: 'templates/test.html',
+        dest: 'templates/dest/',
+        dataFiles: 'data/test.*',
+        replacements: [
+          {
+            pattern: '[NON_DEFAULT_KEY]',
+            keyString: 'NON_DEFAULT_KEY'
+          },
+          {
+            pattern: '{{KEY}}'
+          }
+        ]
       }
     },
 
