@@ -1,9 +1,11 @@
 'use strict';
 
 var _ = require('lodash');
-var utils = require('../utils');
+var utils = require('./util');
+var Replacements = {};
 
-exports.getReplacementRegExps = function(replacements, options) {
+
+Replacements.getReplacementRegExps = function(replacements, options) {
   if (typeof replacements === 'undefined') {
     /* default replacements */
     replacements = [
@@ -20,16 +22,18 @@ exports.getReplacementRegExps = function(replacements, options) {
       r.keyString = defaultKeyString;
     }
 
-    return exports.buildRegExp(r);
+    return Replacements.buildRegExp(r);
   });
 
   return replacementRegExps;
 };
 
-exports.buildRegExp = function(replacement) {
+Replacements.buildRegExp = function(replacement) {
   var keyStringPattern = '([a-z0-9_]+(\\.[a-z0-9_]+)*)';
   var replacementPattern = utils.escapeRegExp(replacement.pattern)
     .replace(replacement.keyString, keyStringPattern);
 
   return new RegExp(replacementPattern, 'gi');
 };
+
+module.exports = Replacements;
