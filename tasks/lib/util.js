@@ -2,8 +2,9 @@
 
 var grunt = require('grunt');
 var _ = require('lodash');
+var Util = {};
 
-exports.expandFilePattern = function(pattern) {
+Util.expandFilePattern = function(pattern) {
   return grunt.file.expand({filter: 'isFile'}, pattern);
 };
 
@@ -11,12 +12,12 @@ exports.expandFilePattern = function(pattern) {
   Modified version of https://gist.github.com/penguinboy/762197
   using lodash
 */
-exports.flattenObject = function(obj) {
+Util.flattenObject = function(obj) {
   var result = {};
 
   _.forOwn(obj, function(srcVal, srcKey) {
     if (typeof srcVal === 'object') {
-      var flatObj = exports.flattenObject(srcVal);
+      var flatObj = Util.flattenObject(srcVal);
       _.forOwn(flatObj, function(flatVal, flatKey) {
         result[srcKey + '.' + flatKey] = flatVal;
       });
@@ -33,6 +34,8 @@ exports.flattenObject = function(obj) {
   Source from:
   developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
 */
-exports.escapeRegExp = function(string){
+Util.escapeRegExp = function(string){
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 };
+
+module.exports = Util;
