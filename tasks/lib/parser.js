@@ -4,17 +4,17 @@ var fs = require('fs');
 var path = require('path');
 var grunt = require('grunt');
 var properties = require('properties');
-var parser = {};
+var Parser = {};
 
-parser.js = function(filepath) {
+Parser.js = function(filepath) {
   return require(path.resolve(filepath));
 };
 
-parser.json = function(filepath) {
+Parser.json = function(filepath) {
   return grunt.file.readJSON(filepath);
 };
 
-parser.properties = function(filepath) {
+Parser.properties = function(filepath) {
   var context = {};
   var fileContents = fs.readFileSync(filepath, 'utf8');
 
@@ -27,15 +27,15 @@ parser.properties = function(filepath) {
   return context;
 };
 
-parser.yaml = function(filepath) {
+Parser.yaml = function(filepath) {
   return grunt.file.readYAML(filepath);
 };
 
-parser.yml = parser.yaml;
+Parser.yml = Parser.yaml;
 
-exports._parser = parser;
-
-exports.parse = function(filepath) {
+Parser.parse = function(filepath) {
   var extension = path.extname(filepath).slice(1);
-  return parser[extension](filepath);
+  return Parser[extension](filepath);
 };
+
+module.exports = Parser;
