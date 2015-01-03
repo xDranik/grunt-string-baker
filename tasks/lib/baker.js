@@ -3,11 +3,12 @@
 var path = require('path');
 var grunt = require('grunt');
 var _ = require('lodash');
-var utils = require('./utils');
-var replacementHelper = require('./helpers/replacement');
-var dataFileHelper = require('./helpers/data-file');
+var utils = require('./util');
+var replacementHelper = require('./replacements');
+var dataFileHelper = require('./data-file');
+var Baker = {};
 
-exports.bake = function(files, replacements, options) {
+Baker.bake = function(files, replacements, options) {
   var srcFiles = utils.expandFilePattern(files.src);
   var dest = files.dest;
   var dataFiles = utils.expandFilePattern(files.dataFiles);
@@ -19,7 +20,7 @@ exports.bake = function(files, replacements, options) {
   var destinationPath;
 
   _.forEach(srcFiles, function(srcFile) {
-    destinationPath = exports.getDestinationPath(srcFile, dest);
+    destinationPath = Baker.getDestinationPath(srcFile, dest);
     grunt.file.copy(srcFile, destinationPath, {
       process: function(text) {
         return _.reduce(replacementRegExps, function(resultText, rRegExp) {
@@ -32,7 +33,7 @@ exports.bake = function(files, replacements, options) {
   });
 };
 
-exports.getDestinationPath = function(filepath, dest) {
+Baker.getDestinationPath = function(filepath, dest) {
   if (typeof dest === 'undefined') {
     return filepath;
   }
@@ -41,13 +42,13 @@ exports.getDestinationPath = function(filepath, dest) {
   return path.join(dest, filename);
 };
 
-exports.validateArguments = function(files, replacements, options) {
-  exports.validateFiles(files);
-  exports.validateReplacements(replacements);
-  exports.validateOptions(options);
+Baker.validateArguments = function(files, replacements, options) {
+  Baker.validateFiles(files);
+  Baker.validateReplacements(replacements);
+  Baker.validateOptions(options);
 };
 
-exports.validateFiles = function(files) {
+Baker.validateFiles = function(files) {
   var srcType = typeof files.src;
   var destType = typeof files.dest;
   var dataFilesType = typeof files.dataFiles;
@@ -63,7 +64,7 @@ exports.validateFiles = function(files) {
   }
 };
 
-exports.validateReplacements = function(replacements) {
+Baker.validateReplacements = function(replacements) {
   var replacementsType = typeof replacements;
 
   if (!Array.isArray(replacements) && replacementsType !== 'undefined') {
@@ -71,7 +72,7 @@ exports.validateReplacements = function(replacements) {
   }
 };
 
-exports.validateOptions = function(options) {
+Baker.validateOptions = function(options) {
   var defaultKeyStringType = typeof options.deaultKeyString;
 
   if (defaultKeyStringType !== 'string' &&
@@ -79,3 +80,5 @@ exports.validateOptions = function(options) {
     grunt.fail.warn('options.defaultKeyString must be a string or undefined.');
   }
 };
+
+module.exports = Baker;
